@@ -14,30 +14,30 @@ data class PageIconResolveable(
 )
 
 
-sealed class Page(
+sealed class BottomPage(
     val name: String,
     @StringRes val titleResource: Int,
     val icon: PageIconResolveable
 ) {
-    object Home : Page(
+    object Home : BottomPage(
         "home",
         R.string.bottom_navigation_item_home,
         PageIconResolveable(material = AppMaterialIcons.Home)
     )
 
-    object Scrobbling : Page(
+    object Scrobbling : BottomPage(
         "scrobbling",
         R.string.bottom_navigation_item_scrobbling,
-        PageIconResolveable(drawable = R.drawable.round_queue_music_24)
+        PageIconResolveable(drawable = R.drawable.ic_round_queue_music_24)
     )
 
-    object Charts : Page(
+    object Charts : BottomPage(
         "charts",
         R.string.bottom_navigation_item_charts,
-        PageIconResolveable(drawable = R.drawable.round_show_chart_24)
+        PageIconResolveable(drawable = R.drawable.ic_round_show_chart_24)
     )
 
-    object Profile : Page(
+    object Profile : BottomPage(
         "profile",
         R.string.bottom_navigation_item_profile,
         PageIconResolveable(material = AppMaterialIcons.Person)
@@ -45,16 +45,16 @@ sealed class Page(
 }
 
 val mainPages = listOf(
-    Page.Home,
-    Page.Scrobbling,
-    Page.Charts,
-    Page.Profile
+    BottomPage.Home,
+    BottomPage.Scrobbling,
+    BottomPage.Charts,
+    BottomPage.Profile
 )
 
 val pagesWithBottomBar = listOf(
-    Page.Home.name,
-    Page.Scrobbling.name,
-    Page.Charts.name,
-    Page.Profile.name,
+    BottomPage.Home.name,
+    BottomPage.Scrobbling.name,
+    BottomPage.Charts.name,
+    BottomPage.Profile.name,
 //    "artist/{storeId}"
 )

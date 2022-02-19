@@ -71,10 +71,10 @@ interface LastfmArtistEndpoint {
 
     @GET("/")
     @LastfmMethod("artist.getTopTracks")
-    @Wrapped(path = ["toptracks", "track"])
+    @Wrapped(path = ["toptracks"])
     suspend fun getTopTracks(
         @Query("artist") artist: String,
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 50,
-    ): List<TrackFromArtistTopTracksItem>
+    ): LastfmArtistTopTracksResponse
 }

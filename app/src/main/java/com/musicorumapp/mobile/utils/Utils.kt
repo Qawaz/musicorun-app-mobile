@@ -2,6 +2,8 @@ package com.musicorumapp.mobile.utils
 
 import java.math.BigInteger
 import java.security.MessageDigest
+import kotlin.math.max
+import kotlin.math.min
 
 
 class Utils {
@@ -21,8 +23,14 @@ class Utils {
         }
 
         fun interpolateValues(value: Float, x1: Float, x2: Float, y1: Float, y2: Float): Float {
-            val percent = (value - x1) / (x2 - x1)
-            return percent * (y2 - y1) + y1
+            val fraction = (value - x1) / (x2 - x1)
+            return max(
+                min(
+                    fraction * (y2 - y1) + y1,
+                    y2
+                ),
+                y1
+            )
         }
     }
 }

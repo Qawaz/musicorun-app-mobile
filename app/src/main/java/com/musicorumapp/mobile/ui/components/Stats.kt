@@ -3,6 +3,7 @@ package com.musicorumapp.mobile.ui.components
 import android.icu.text.CompactDecimalFormat
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,9 +13,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.musicorumapp.mobile.ui.contexts.LocalCompactDecimalFormatContext
 import com.musicorumapp.mobile.ui.theme.MusicorumTheme
 import com.musicorumapp.mobile.ui.theme.PaddingSpacing
-import com.musicorumapp.mobile.ui.theme.SecondaryTextColor
+import com.musicorumapp.mobile.ui.theme.md_theme_dark_onSecondary
 
 @Composable
 fun StatItem(
@@ -33,7 +35,7 @@ fun StatItem(
         Text(
             title,
             fontSize = 14.sp,
-            color = SecondaryTextColor,
+            color = MaterialTheme.colorScheme.secondary,
         )
     }
 }
@@ -42,9 +44,7 @@ fun StatItem(
 fun Stats(
     stats: Map<String, Int?> = emptyMap()
 ) {
-    val context = LocalContext.current
-    val locale = context.resources.configuration.locales[0]
-    val instance = CompactDecimalFormat.getInstance(locale, CompactDecimalFormat.CompactStyle.SHORT)
+    val instance = LocalCompactDecimalFormatContext.current.instance
     Row(
         modifier = Modifier
             .fillMaxWidth()

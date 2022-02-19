@@ -1,11 +1,11 @@
 package com.musicorumapp.mobile.api.models
 
-import com.musicorumapp.mobile.Constants
 import com.musicorumapp.mobile.utils.Utils
 import com.squareup.moshi.Json
 
 data class Album(
-    val name: String,
+    override val entity: LastfmEntity = LastfmEntity.ALBUM,
+    override val name: String,
     val artist: String?,
     val url: String,
     val images: LastfmImages,
@@ -16,7 +16,7 @@ data class Album(
     val tags: MutableList<String> = mutableListOf(),
     val wiki: Wiki? = null,
 
-    ) : PageableItem {
+    ) : PageableItem, BaseEntity {
     private val onResourcesChangeCallbacks: MutableList<(Album) -> Unit> = mutableListOf()
 
     var resource: AlbumResource? = null
@@ -25,8 +25,8 @@ data class Album(
             onResourcesChangeCallbacks.forEach { it(this) }
         }
 
-    val imageURL: String?
-        get() = images.bestImage ?: resource?.cover
+    override val imageURL: String?
+        get() = images.bestImage ?: resource?.spotify_covers?.getOrNull(0)
 
     fun onResourcesChange(cb: (Album) -> Unit) {
         onResourcesChangeCallbacks.add(cb)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -17,22 +18,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.musicorumapp.mobile.R
 import com.musicorumapp.mobile.api.models.*
-import com.musicorumapp.mobile.states.LocalNavigationContext
-import com.musicorumapp.mobile.states.LocalNavigationContextContent
-import com.musicorumapp.mobile.states.LocalSnackbarContext
-import com.musicorumapp.mobile.states.models.ArtistPageViewModel
+import com.musicorumapp.mobile.ui.contexts.LocalNavigationContext
+import com.musicorumapp.mobile.ui.contexts.LocalNavigationContextContent
+import com.musicorumapp.mobile.ui.contexts.LocalSnackbarContext
+import com.musicorumapp.mobile.state.models.ArtistPageViewModel
 import com.musicorumapp.mobile.ui.components.*
+import com.musicorumapp.mobile.ui.contexts.LocalCompactDecimalFormatContext
 import com.musicorumapp.mobile.ui.theme.AppMaterialIcons
-import com.musicorumapp.mobile.ui.theme.KindaBlack
 import com.musicorumapp.mobile.ui.theme.MusicorumTheme
 import com.musicorumapp.mobile.ui.theme.PaddingSpacing
+import com.musicorumapp.mobile.ui.theme.md_theme_dark_background
 import com.musicorumapp.mobile.utils.Utils
 import com.musicorumapp.mobile.utils.calculateColorContrast
 import com.musicorumapp.mobile.utils.rememberPredominantColor
+import kotlinx.coroutines.launch
 
 @Composable
 fun ArtistPage(
@@ -73,7 +78,7 @@ fun ArtistContent(
         colorFinder = {
             it.lightVibrantSwatch ?: it.vibrantSwatch ?: it.swatches.maxByOrNull { s ->
                 calculateColorContrast(
-                    Color(s.rgb), KindaBlack
+                    Color(s.rgb), md_theme_dark_background
                 )
             }
         }
@@ -106,8 +111,6 @@ fun ArtistContent(
     }
     val navContext = LocalNavigationContext.current
 
-    println("---------------------- ARTIST IMAGE ${artist?.imageURL}")
-
     ArtistContentInside(
         artist = artist,
         topTracks = topTracks,
@@ -135,6 +138,9 @@ fun ArtistContentInside(
 ) {
 
     val top5tracks = topTracks?.getAllItems()?.take(5)
+    val resources = LocalContext.current.resources
+    val compactDecimalInstance = LocalCompactDecimalFormatContext.current.instance
+    val navigationContext = LocalNavigationContext.current
 
     Column(
         modifier = Modifier.verticalScroll(scrollState)
@@ -147,6 +153,8 @@ fun ArtistContentInside(
             )
         }
         Column {
+            Divider()
+            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
             Stats(
                 stats = mapOf(
                     stringResource(R.string.listeners) to artist?.listeners,
@@ -154,14 +162,25 @@ fun ArtistContentInside(
                     stringResource(R.string.your_scrobbles) to artist?.userPlayCount,
                 )
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
             Tags(artist?.tags, color = predominantColor)
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
             Divider()
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
             Section(
                 title = stringResource(R.string.top_tracks),
-                modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding)
+                subTitle = if (topTracks != null) resources.getQuantityString(
+                    R.plurals.tracks_quantity,
+                    topTracks.totalResults,
+                    compactDecimalInstance.format(topTracks.totalResults)
+                ) else "",
+                modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding),
+                onClick = {
+                    if (topTracks != null && artist != null) {
+                        val id = navigationContext.addPagingController(R.string.top_tracks ,topTracks, artist)
+                        navigationContext.navigationController?.navigate("extendedList/$id")
+                    }
+                }
             ) {
                 Column {
                     if (top5tracks != null) {
@@ -175,15 +194,16 @@ fun ArtistContentInside(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
             Divider()
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
             Section(
                 title = stringResource(R.string.similar_artists),
                 headerModifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding)
             ) {
                 SimilarArtists(artist?.similar)
             }
+            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
         }
     }
 }
@@ -195,6 +215,8 @@ fun ArtistAppBar(
     mainImagePainter: Painter,
     name: String?
 ) {
+    val snackbarHost = LocalSnackbarContext.current
+    val scope = rememberCoroutineScope()
     FadeableAppBar(
         alpha = Utils.interpolateValues(scrollState.value.toFloat(), 1100f, 1500f, 0f, 1f)
             .coerceIn(0f, 1f),
@@ -204,9 +226,18 @@ fun ArtistAppBar(
             }) {
                 Icon(imageVector = AppMaterialIcons.ArrowBack, contentDescription = "Back")
             }
+        },
+        actions = {
+            IconButton(onClick = {
+                scope.launch {
+                    snackbarHost.showSnackBar(name ?: "")
+                }
+            }) {
+                Icon(imageVector = AppMaterialIcons.MoreVert, contentDescription = "More")
+            }
         }
     ) {
-        val size = 32.dp
+        val size = 42.dp
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -235,7 +266,10 @@ fun ArtistAppBar(
                 name.orEmpty(),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
-                modifier = Modifier.offset(y = 2.dp)
+                modifier = Modifier.offset(y = 2.dp),
+                style = AppBarTextStyle.copy(
+                    fontSize = 18.sp
+                )
             )
         }
     }

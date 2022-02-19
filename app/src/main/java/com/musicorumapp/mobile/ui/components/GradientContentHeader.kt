@@ -62,7 +62,7 @@ fun GradientContentHeader(
     Box(
         modifier = Modifier
             .statusBarsPadding()
-            .padding(top = 240.dp)
+            .padding(top = 220.dp)
             .fillMaxWidth()
     ) {
         Column(
@@ -79,15 +79,15 @@ fun GradientContentHeader(
                     .size(imageSize, imageSize)
                     .clip(CircleShape)
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(15.dp))
             Text(title,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.headlineMedium,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
                 maxLines = 1
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(25.dp))
         }
     }
 }

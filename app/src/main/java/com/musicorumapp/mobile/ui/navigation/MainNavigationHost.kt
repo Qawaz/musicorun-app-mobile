@@ -3,23 +3,21 @@ package com.musicorumapp.mobile.ui.navigation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.musicorumapp.mobile.states.LocalNavigationContext
-import com.musicorumapp.mobile.states.LocalNavigationContextContent
-import com.musicorumapp.mobile.states.models.AuthenticationViewModel
-import com.musicorumapp.mobile.states.models.HomePageViewModel
+import com.musicorumapp.mobile.ui.contexts.LocalNavigationContext
+import com.musicorumapp.mobile.ui.contexts.LocalNavigationContextContent
+import com.musicorumapp.mobile.state.models.AuthenticationViewModel
 import com.musicorumapp.mobile.ui.components.PageAnimation
 import com.musicorumapp.mobile.ui.pages.artist.ArtistPage
 import com.musicorumapp.mobile.ui.pages.DiscoverPage
+import com.musicorumapp.mobile.ui.pages.ExtendedPageableListPage
 import com.musicorumapp.mobile.ui.pages.HomePage
+import com.musicorumapp.mobile.ui.pages.settings.SettingsMainPage
+import com.musicorumapp.mobile.ui.pages.settings.customization.ColorSchemeSettingsPage
 
 @Composable
 fun MainNavigationHost(
@@ -31,25 +29,25 @@ fun MainNavigationHost(
             navController
         )
     ) {
-        NavHost(navController = navController, startDestination = Page.Home.name) {
-            composable(Page.Home.name) {
+        NavHost(navController = navController, startDestination = BottomPage.Home.name) {
+            composable(BottomPage.Home.name) {
                 PageAnimation {
                     HomePage(
                         authenticationViewModel = authenticationViewModel
                     )
                 }
             }
-            composable(Page.Scrobbling.name) {
+            composable(BottomPage.Scrobbling.name) {
                 PageAnimation {
                     Text("Scrobble")
                 }
             }
-            composable(Page.Charts.name) {
+            composable(BottomPage.Charts.name) {
                 PageAnimation {
                     Text("Charts")
                 }
             }
-            composable(Page.Profile.name) {
+            composable(BottomPage.Profile.name) {
                 PageAnimation {
                     Text("Profile")
                 }
@@ -66,6 +64,29 @@ fun MainNavigationHost(
                 }
             }
 
+            composable(
+                ComposableRoutes.ExtendedList("{storeId}"),
+                arguments = listOf(navArgument("storeId") { type = NavType.StringType })
+            ) {
+                val storeId = it.arguments?.getString("storeId")
+                val storeItem = LocalNavigationContext.current.pagingControllerStore[storeId]
+                PageAnimation {
+                    ExtendedPageableListPage(title = storeItem!!.title, from = storeItem.from, controller = storeItem.controller)
+                }
+            }
+
+            composable(ComposableRoutes.SettingsMainPage) {
+                PageAnimation {
+                    SettingsMainPage()
+                }
+            }
+
+            composable(ComposableRoutes.ColorSchemeSettingsPage) {
+                PageAnimation {
+                    ColorSchemeSettingsPage()
+                }
+            }
+
             composable(ComposableRoutes.Search) {
                 PageAnimation {
                     DiscoverPage()
@@ -76,5 +97,8 @@ fun MainNavigationHost(
 }
 
 object ComposableRoutes {
-    const val Search = "search"
+    val ExtendedList = { it: String -> "extendedList/${it}" }
+    val Search = "search"
+    val SettingsMainPage = "settings"
+    val ColorSchemeSettingsPage = "settings/colorScheme"
 }

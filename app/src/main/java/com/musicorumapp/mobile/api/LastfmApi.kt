@@ -3,10 +3,7 @@ package com.musicorumapp.mobile.api
 import com.musicorumapp.mobile.api.interceptors.LastfmKeyInterceptor
 import com.musicorumapp.mobile.api.interceptors.LastfmMethodInterceptor
 import com.musicorumapp.mobile.api.interceptors.SignedRequestInterceptor
-import com.musicorumapp.mobile.api.models.Album
-import com.musicorumapp.mobile.api.models.Artist
-import com.musicorumapp.mobile.api.models.PagingController
-import com.musicorumapp.mobile.api.models.Track
+import com.musicorumapp.mobile.api.models.*
 import com.musicorumapp.mobile.utils.Utils
 import com.serjltt.moshi.adapters.FallbackOnNull
 import com.serjltt.moshi.adapters.Wrapped
@@ -70,6 +67,7 @@ class LastfmApi {
             var totalResults = 0
 
             val controller = PagingController(
+                entity = LastfmEntity.ARTIST,
                 perPage = perPage,
                 requester = { pg ->
                     val items = getArtistEndpoint().searchArtists(query, perPage, pg)
@@ -89,6 +87,7 @@ class LastfmApi {
             var totalResults = 0
 
             val controller = PagingController(
+                entity = LastfmEntity.ALBUM,
                 perPage = perPage,
                 requester = { pg ->
                     val items = getAlbumsEndpoint().searchAlbums(query, perPage, pg)
@@ -108,6 +107,7 @@ class LastfmApi {
             var totalResults = 0
 
             val controller = PagingController(
+                entity = LastfmEntity.TRACK,
                 perPage = perPage,
                 requester = { pg ->
                     val items = getTracksEndpoint().searchTracks(query, perPage, pg)

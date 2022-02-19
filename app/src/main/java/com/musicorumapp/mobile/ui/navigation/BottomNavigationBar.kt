@@ -1,9 +1,8 @@
 package com.musicorumapp.mobile.ui.navigation
 
 import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,21 +15,28 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.navigationBarsPadding
 import com.musicorumapp.mobile.Constants
+import com.musicorumapp.mobile.ui.theme.md_theme_dark_surface
 
 @Composable
 fun BottomNavigationBar(
     navController: NavHostController
 ) {
     if (pagesWithBottomBar.contains(currentRoute(navController = navController).orEmpty())) {
-        NavigationBar() {
-//            Column(
-//                modifier = Modifier
-//                    .navigationBarsPadding()
-//            ) {
-//                Row(
-//                    modifier = Modifier
-//                        .height(56.dp)
-//                ) {
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            tonalElevation = 1.dp,
+
+            ) {
+            Box(
+                modifier = Modifier.navigationBarsPadding()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(75.dp)
+                        .selectableGroup(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     mainPages.forEach {
                         val title = stringResource(id = it.titleResource)
                         val currentRoute = currentRoute(navController = navController)
@@ -75,8 +81,9 @@ fun BottomNavigationBar(
                             )
                     }
                 }
-//            }
-//        }
+            }
+
+        }
     }
 }
 

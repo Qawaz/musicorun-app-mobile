@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsPadding
 import com.musicorumapp.mobile.R
-import com.musicorumapp.mobile.states.LocalNavigationContext
+import com.musicorumapp.mobile.ui.contexts.LocalNavigationContext
 import com.musicorumapp.mobile.ui.navigation.ComposableRoutes
 import com.musicorumapp.mobile.ui.theme.AppMaterialIcons
 import com.musicorumapp.mobile.ui.theme.MusicorumTheme

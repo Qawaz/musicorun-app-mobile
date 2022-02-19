@@ -12,5 +12,4 @@
 /captures
 .externalNativeBuild
 .cxx
-tokens.properties
-.idea
+local.properties

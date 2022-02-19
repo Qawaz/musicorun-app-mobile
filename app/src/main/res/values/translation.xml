@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="bottom_navigation_item_home">Home</string>
-    <string name="bottom_navigation_item_scrobbling">Scrobble</string>
+    <string name="bottom_navigation_item_scrobbling">Scrobbles</string>
     <string name="bottom_navigation_item_charts">Charts</string>
     <string name="bottom_navigation_item_profile">Profile</string>
 
@@ -20,6 +20,21 @@
     <string name="top_tracks">Top tracks</string>
     <string name="top_albums">Top albums</string>
     <string name="top_artists">Top artists</string>
+
+    <plurals name="tracks_quantity">
+        <item quantity="one">%1$s track</item>
+        <item quantity="other">%1$s tracks</item>
+    </plurals>
+
+    <plurals name="albums_quantity">
+        <item quantity="one">%1$s album</item>
+        <item quantity="other">%1$s albums</item>
+    </plurals>
+
+    <plurals name="artists_quantity">
+        <item quantity="one">%1$s artist</item>
+        <item quantity="other">%1$s artists</item>
+    </plurals>
 
     <string name="listeners">Listeners</string>
     <string name="scrobbles">Scrobbles</string>

@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import com.google.accompanist.insets.statusBarsHeight
+import com.google.accompanist.insets.statusBarsPadding
 
 @Composable
 fun FadeableAppBar(
@@ -24,9 +27,11 @@ fun FadeableAppBar(
         navigationIcon = navigationIcon,
         actions = actions
     ) {
-        Box(modifier = Modifier.graphicsLayer(
-            alpha = alpha
-        )) {
+        Box(
+            modifier = Modifier.graphicsLayer(
+                alpha = alpha
+            )
+        ) {
             content()
         }
     }
@@ -39,18 +44,22 @@ fun FadeableAppBarContent(
     actions: @Composable RowScope.() -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = alpha)
-    Column {
+    val color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha)
+    Column(
+        modifier = Modifier.background(color)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsHeight()
-                .background(color)
         )
         SmallTopAppBar(
             title = content,
             navigationIcon = navigationIcon,
-            actions = actions
+            actions = actions,
+            colors = TopAppBarDefaults.smallTopAppBarColors(
+                containerColor = Color.Transparent
+            ),
         )
     }
 }

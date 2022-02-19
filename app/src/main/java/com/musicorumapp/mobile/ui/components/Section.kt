@@ -20,7 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.musicorumapp.mobile.R
 import com.musicorumapp.mobile.ui.theme.MusicorumTheme
-import com.musicorumapp.mobile.ui.theme.SecondaryTextColor
+import com.musicorumapp.mobile.ui.theme.PaddingSpacing
+import com.musicorumapp.mobile.ui.theme.md_theme_dark_onSecondary
 
 @Composable
 fun Section(
@@ -32,17 +33,16 @@ fun Section(
     content: @Composable () -> Unit
 ) {
 
-    if (onClick != null) {
-        headerModifier.clickable(onClick = onClick)
-    }
-
     Column(modifier = modifier) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
+            modifier = headerModifier
                 .fillMaxWidth()
-                .composed { headerModifier }
+                .clickable(enabled = onClick != null) {
+                    if (onClick != null) onClick()
+                }
+                .padding(bottom = PaddingSpacing.SmallPadding)
         ) {
             Column {
                 Text(
@@ -58,15 +58,15 @@ fun Section(
                         style = MaterialTheme.typography.labelMedium,
                         overflow = TextOverflow.Ellipsis,
                         lineHeight = 11.sp,
-                        color = SecondaryTextColor
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
             }
 
             if (onClick != null) {
                 Icon(
-                    painterResource(id = R.drawable.outline_chevron_right_24),
-                    contentDescription = stringResource(id = R.string.view_more)
+                    painterResource(id = R.drawable.ic_round_chevron_right_24),
+                    contentDescription = stringResource(id = R.string.view_more),
                 )
             }
         }

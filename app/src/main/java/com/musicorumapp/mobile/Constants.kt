@@ -15,6 +15,8 @@ object Constants {
     const val DEFAULT_ARTIST_IMAGE_URL = "https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png"
 }
 
+val LogTag = Constants.LOG_TAG
+
 object PrefConstantKeys {
     const val LASTFM_AUTH_KEY = "lastfm_auth_key"
 }

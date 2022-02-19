@@ -1,21 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.Musicorum" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.Musicorum" parent="android:Theme.Black.NoTitleBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/transparent</item>
         <item name="android:colorBackground">@color/kinda_black</item>
     </style>
 
     <style name="Theme.Musicorum.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
     </style>
 
-    <style name="Theme.Musicorum.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.Musicorum.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
-
-    <style name="Theme.Musicorum.SplashScreenTheme" parent="Theme.Musicorum">
+    <style name="Theme.Musicorum.SplashScreenTheme" parent="android:ThemeOverlay.Material.Dark">
         <item name="android:statusBarColor">@color/ic_launcher_background</item>
         <item name="android:navigationBarColor">@color/ic_launcher_background</item>
         <item name="android:colorBackground">@color/ic_launcher_background</item>

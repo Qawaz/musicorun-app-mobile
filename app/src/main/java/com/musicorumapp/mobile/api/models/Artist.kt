@@ -4,7 +4,8 @@ import com.musicorumapp.mobile.utils.Utils
 import com.squareup.moshi.Json
 
 class Artist(
-    val name: String,
+    override val entity: LastfmEntity = LastfmEntity.ARTIST,
+    override val name: String,
     val url: String,
     var listeners: Int? = null,
     var playCount: Int? = null,
@@ -12,11 +13,11 @@ class Artist(
     val similar: MutableList<Artist> = mutableListOf(),
     val tags: MutableList<String> = mutableListOf(),
     var wiki: Wiki? = null,
-) : PageableItem {
+) : PageableItem, BaseEntity {
     private val onResourcesChangeCallbacks: MutableList<(Artist) -> Unit> = mutableListOf()
 
-    val imageURL: String?
-        get() = resource?.image
+    override val imageURL: String?
+        get() = resource?.spotify_images?.getOrNull(0)
 
     var resource: ArtistResource? = null
         set(value) {
@@ -32,9 +33,9 @@ class Artist(
     companion object {
         fun fromSample(): Artist {
             return Artist(
-                name = "Doja Cat",
+                name = "Loona",
                 listeners = 361725,
-                url = "https://www.last.fm/music/Doja+Cat"
+                url = "https://www.last.fm/music/Loona"
             )
         }
     }
@@ -85,7 +86,7 @@ data class LastfmArtistInfoResponse(
             listeners = Utils.anyToInt(stats.listeners),
             playCount = Utils.anyToInt(stats.playcount),
             userPlayCount = Utils.anyToInt(stats.userplaycount),
-            tags = tags?.tag?.map{ it.name}?.toMutableList() ?: mutableListOf(),
+            tags = tags?.tag?.map { it.name }?.toMutableList() ?: mutableListOf(),
             wiki = bio?.toWiki(),
             similar = similar.artist.map { it.toArtist() }.toMutableList()
         )
@@ -120,3 +121,11 @@ data class LastfmArtistSearchResponse(
         }
     }
 }
+
+data class LastfmArtistTopTracksResponse(
+    @field:Json(name = "@attr")
+    val attributes: ListResponseAttributes,
+
+    @field:Json(name = "track")
+    val tracks: List<TrackFromArtistTopTracksItem>
+)

@@ -15,12 +15,13 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.musicorumapp.mobile.Constants
 import com.musicorumapp.mobile.authentication.AuthenticationPreferences
-import com.musicorumapp.mobile.states.models.AuthenticationViewModel
-import com.musicorumapp.mobile.ui.theme.KindaBlack
+import com.musicorumapp.mobile.state.models.AuthenticationViewModel
 import com.musicorumapp.mobile.ui.theme.MusicorumTheme
+import com.musicorumapp.mobile.ui.theme.md_theme_dark_background
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,31 +32,40 @@ fun LoginScreen(
     val systemUiController = rememberSystemUiController()
     val context = LocalContext.current
 
-    systemUiController.setNavigationBarColor(KindaBlack)
+    systemUiController.setNavigationBarColor(md_theme_dark_background)
     Scaffold {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
+        Box(
+            modifier = Modifier
+                .navigationBarsWithImePadding()
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxHeight(),
+                modifier = Modifier.fillMaxSize(),
             ) {
                 Text("Please login with your Last.fm account first")
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
                         val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-                            .setToolbarColor(KindaBlack.toArgb())
-                            .setNavigationBarColor(KindaBlack.toArgb())
+                            .setToolbarColor(md_theme_dark_background.toArgb())
+                            .setNavigationBarColor(md_theme_dark_background.toArgb())
                             .build()
                         val customTabsIntent = CustomTabsIntent.Builder()
-                            .setColorSchemeParams(CustomTabsIntent.COLOR_SCHEME_DARK, colorSchemeParams)
-                            .setColorSchemeParams(CustomTabsIntent.COLOR_SCHEME_LIGHT, colorSchemeParams)
+                            .setColorSchemeParams(
+                                CustomTabsIntent.COLOR_SCHEME_DARK,
+                                colorSchemeParams
+                            )
+                            .setColorSchemeParams(
+                                CustomTabsIntent.COLOR_SCHEME_LIGHT,
+                                colorSchemeParams
+                            )
                             .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
                             .build()
-                        customTabsIntent.launchUrl(context, Uri.parse(Constants.MUSICORUM_LOGIN_URL))
+                        customTabsIntent.launchUrl(
+                            context,
+                            Uri.parse(Constants.MUSICORUM_LOGIN_URL)
+                        )
                     },
                 ) {
                     Text("Login with Last.fm")

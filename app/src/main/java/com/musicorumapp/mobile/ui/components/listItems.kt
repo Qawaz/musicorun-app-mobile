@@ -5,10 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +28,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.musicorumapp.mobile.Constants
 import com.musicorumapp.mobile.api.models.*
 import com.musicorumapp.mobile.ui.theme.MusicorumTheme
-import com.musicorumapp.mobile.ui.theme.SecondaryTextColor
+import com.musicorumapp.mobile.ui.theme.md_theme_dark_onSecondary
 
 private val roundedImageClip = RoundedCornerShape(4.dp)
 
@@ -79,7 +76,7 @@ fun ListItem(
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         fontSize = 13.sp,
-                        color = SecondaryTextColor,
+                        color = MaterialTheme.colorScheme.secondary,
                         modifier = Modifier
                             .placeholder(
                                 visible = placeholder,

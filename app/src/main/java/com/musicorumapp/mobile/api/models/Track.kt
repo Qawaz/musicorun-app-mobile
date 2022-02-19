@@ -4,13 +4,14 @@ import com.musicorumapp.mobile.utils.Utils
 import com.squareup.moshi.Json
 
 data class Track(
-    val name: String,
+    override val entity: LastfmEntity = LastfmEntity.TRACK,
+    override val name: String,
     val artist: String? = null,
     val url: String? = null,
     val playCount: Int? = null,
     val listeners: Int? = null,
     var images: LastfmImages
-) : PageableItem {
+) : PageableItem, BaseEntity {
     private val onResourcesChangeCallbacks: MutableList<(Track) -> Unit> = mutableListOf()
 
     var resource: TrackResource? = null
@@ -19,8 +20,8 @@ data class Track(
             onResourcesChangeCallbacks.forEach { it(this) }
         }
 
-    val imageURL: String?
-        get() = images.bestImage ?: resource?.cover
+    override val imageURL: String?
+        get() = images.bestImage ?: resource?.spotify_covers?.getOrNull(0)
 
     fun onResourcesChange(cb: (Track) -> Unit) = onResourcesChangeCallbacks.add(cb)
 

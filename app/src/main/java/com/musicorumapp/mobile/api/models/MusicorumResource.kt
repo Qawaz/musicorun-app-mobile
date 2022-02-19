@@ -49,30 +49,30 @@ class MusicorumResource {
 data class ArtistResource(
     val hash: String,
     val name: String?,
-    val spotify: String?,
-    val image: String?
+    val spotify_id: String?,
+    val spotify_images: List<String>
 )
 
 data class AlbumResource(
     val hash: String,
     val name: String?,
-    val spotify: String?,
-    val cover: String?
+    val spotify_id: String?,
+    val spotify_covers: List<String>
 )
 
 data class TrackResource(
     val hash: String,
     val name: String?,
-    val artist: String?,
+    val artists: List<String>,
     val album: String?,
     val preview: String?,
-    val spotify: String?,
-    val deezer: String?,
-    val cover: String?,
+    val spotify_id: String?,
+    val deezer_id: String?,
+    val spotify_covers: List<String>,
     val duration: Long?,
-    val analysis: TrackResourceAnalysis?
+    val features: TrackResourceFeatures?
 ) {
-    data class TrackResourceAnalysis(
+    data class TrackResourceFeatures(
         val energy: Double?,
         val danceability: Double,
         val speechiness: Double,

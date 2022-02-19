@@ -1,12 +1,13 @@
 package com.musicorumapp.mobile.api.models
 
 class PagingController<T: PageableItem> (
+    val entity: LastfmEntity,
     val perPage: Int = 20,
     var totalResults: Int = 0,
     private val pages: MutableMap<Int, List<T>> = mutableMapOf(),
     val requester: suspend (page: Int) -> List<T>
 ) {
-    fun addPageContent(page: Int, items: List<T>): PagingController<T> {
+    private fun addPageContent(page: Int, items: List<T>): PagingController<T> {
         pages[page] = items
         return this
     }

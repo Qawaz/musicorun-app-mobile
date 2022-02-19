@@ -3,10 +3,7 @@ package com.musicorumapp.mobile.repos
 import com.musicorumapp.mobile.api.LastfmApi
 import com.musicorumapp.mobile.api.LastfmArtistEndpoint
 import com.musicorumapp.mobile.api.LastfmTrackEndpoint
-import com.musicorumapp.mobile.api.models.Album
-import com.musicorumapp.mobile.api.models.Artist
-import com.musicorumapp.mobile.api.models.PagingController
-import com.musicorumapp.mobile.api.models.Track
+import com.musicorumapp.mobile.api.models.*
 import com.musicorumapp.mobile.utils.Utils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,19 +30,30 @@ class ArtistRepository @Inject constructor(
     }
 
     suspend fun getArtistTopTracks(artist: String, perPage: Int = 20): PagingController<Track> {
+        var totalResponses = 0
         val controller = PagingController(
+            entity = LastfmEntity.TRACK,
             perPage = perPage,
             requester = { pg ->
-                artistEndpoint.getTopTracks(artist, limit = perPage, page = pg).map { it.toTrack() }
+                val response = artistEndpoint.getTopTracks(artist, limit = perPage, page = pg)
+
+                println(response.tracks)
+                println(response.tracks.size)
+
+                totalResponses = Utils.anyToInt(response.attributes.total)
+
+                response.tracks.map { it.toTrack() }
             }
         )
         controller.doRequest(1)
+        controller.totalResults = totalResponses
 
         return controller
     }
 
     suspend fun getArtistTopAlbums(artist: String, perPage: Int = 20): PagingController<Album> {
         val controller = PagingController(
+            entity = LastfmEntity.ALBUM,
             perPage = perPage,
             requester = { pg ->
                 artistEndpoint.getTopAlbums(artist, limit = perPage, page = pg).map { it.toAlbum() }

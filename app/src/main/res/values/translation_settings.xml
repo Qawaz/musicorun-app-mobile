@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Customization section -->
+    <string name="settings_customization_name">Customization</string>
+
+    <!--    Color scheme -->
+    <string name="settings_customization_scheme">Color scheme</string>
+    <string name="settings_customization_scheme_description">Customize your app color scheme</string>
+
+    <string name="settings_customization_scheme_example">Example</string>
+
+    <string name="settings_customization_scheme_musicorum">Musicorum theme</string>
+    <string name="settings_customization_scheme_musicorum_description">The default Musicorum\'s "Mostly Red" color scheme</string>
+
+    <string name="settings_customization_scheme_profile">Profile\'s avatar</string>
+    <string name="settings_customization_scheme_profile_description">Based on your profile\'s avatar image predominant color</string>
+
+    <string name="settings_customization_scheme_system">System</string>
+    <string name="settings_customization_scheme_system_description">Based on your system\'s scheme primary color</string>
+    <string name="settings_customization_scheme_system_unavailable">Supported on Android 12+ only</string>
+</resources>
