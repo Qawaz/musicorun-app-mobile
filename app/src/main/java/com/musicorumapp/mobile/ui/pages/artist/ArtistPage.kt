@@ -2,6 +2,7 @@ package com.musicorumapp.mobile.ui.pages.artist
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -63,13 +64,13 @@ fun ArtistContent(
     _artist: Artist,
     viewModel: ArtistPageViewModel
 ) {
-    val fetched by viewModel.fetched.observeAsState(false)
+    val fetched = viewModel.fetched
 
-    val artist by viewModel.artist.observeAsState(_artist)
-    val topTracks by viewModel.topTracks.observeAsState()
-    val topAlbums by viewModel.topAlbums.observeAsState()
-    val predominantColor by viewModel.predominantColor.observeAsState()
-    val imageBitmap by viewModel.imageBitmap.observeAsState()
+    val artist = viewModel.artist
+    val topTracks = viewModel.topTracks
+    val topAlbums = viewModel.topAlbums
+    val predominantColor = viewModel.predominantColor
+    val imageBitmap = viewModel.imageBitmap
 
     val snackbarContext = LocalSnackbarContext.current
     val scrollState = rememberScrollState()
@@ -114,6 +115,7 @@ fun ArtistContent(
     ArtistContentInside(
         artist = artist,
         topTracks = topTracks,
+        topAlbums = topAlbums,
         scrollState = scrollState,
         mainImagePainter = painter,
         backgroundPainter = backgroundPainter,
@@ -131,6 +133,7 @@ fun ArtistContent(
 fun ArtistContentInside(
     artist: Artist?,
     topTracks: PagingController<Track>?,
+    topAlbums: PagingController<Album>?,
     scrollState: ScrollState,
     mainImagePainter: Painter,
     backgroundPainter: Painter,
@@ -138,6 +141,7 @@ fun ArtistContentInside(
 ) {
 
     val top5tracks = topTracks?.getAllItems()?.take(5)
+    val top5albums = topAlbums?.getAllItems()?.take(5)
     val resources = LocalContext.current.resources
     val compactDecimalInstance = LocalCompactDecimalFormatContext.current.instance
     val navigationContext = LocalNavigationContext.current
@@ -152,59 +156,100 @@ fun ArtistContentInside(
                 backgroundPainter = backgroundPainter
             )
         }
-        Column {
-            Divider()
-            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
-            Stats(
-                stats = mapOf(
-                    stringResource(R.string.listeners) to artist?.listeners,
-                    stringResource(R.string.scrobbles) to artist?.playCount,
-                    stringResource(R.string.your_scrobbles) to artist?.userPlayCount,
-                )
+
+        Divider()
+        Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
+        Stats(
+            stats = mapOf(
+                stringResource(R.string.listeners) to artist?.listeners,
+                stringResource(R.string.scrobbles) to artist?.playCount,
+                stringResource(R.string.your_scrobbles) to artist?.userPlayCount,
             )
-            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
-            Tags(artist?.tags, color = predominantColor)
-            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
-            Divider()
-            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
-            Section(
-                title = stringResource(R.string.top_tracks),
-                subTitle = if (topTracks != null) resources.getQuantityString(
-                    R.plurals.tracks_quantity,
-                    topTracks.totalResults,
-                    compactDecimalInstance.format(topTracks.totalResults)
-                ) else "",
-                modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding),
-                onClick = {
-                    if (topTracks != null && artist != null) {
-                        val id = navigationContext.addPagingController(R.string.top_tracks ,topTracks, artist)
-                        navigationContext.navigationController?.navigate("extendedList/$id")
-                    }
+        )
+        Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
+        Tags(artist?.tags, color = predominantColor)
+        Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
+        Divider()
+        Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
+        Section(
+            title = stringResource(R.string.top_tracks),
+            subTitle = if (topTracks != null) resources.getQuantityString(
+                R.plurals.tracks_quantity,
+                topTracks.totalResults,
+                compactDecimalInstance.format(topTracks.totalResults)
+            ) else "",
+            modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding),
+            onClick = {
+                if (topTracks != null && artist != null) {
+                    val id = navigationContext.addPagingController(
+                        R.string.top_tracks,
+                        topTracks,
+                        artist
+                    )
+                    navigationContext.navigationController?.navigate("extendedList/$id")
                 }
-            ) {
-                Column {
-                    if (top5tracks != null) {
-                        top5tracks.forEach {
-                            TrackListItem(track = it, modifier = Modifier.clickable { })
-                        }
-                    } else {
-                        for (x in 1..5) {
-                            TrackListItem(null)
-                        }
+            }
+        ) {
+            Column {
+                if (top5tracks != null) {
+                    top5tracks.forEach {
+                        TrackListItem(track = it, modifier = Modifier.clickable { })
+                    }
+                } else {
+                    for (x in 1..5) {
+                        TrackListItem()
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
-            Divider()
-            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
-            Section(
-                title = stringResource(R.string.similar_artists),
-                headerModifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding)
-            ) {
-                SimilarArtists(artist?.similar)
-            }
-            Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
         }
+        Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
+
+
+        Divider()
+        Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
+        Section(
+            title = stringResource(R.string.top_albums),
+            subTitle = if (topAlbums != null) resources.getQuantityString(
+                R.plurals.albums_quantity,
+                topAlbums.totalResults,
+                compactDecimalInstance.format(topAlbums.totalResults)
+            ) else "",
+            modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding),
+            onClick = {
+                if (topAlbums != null && artist != null) {
+                    val id = navigationContext.addPagingController(
+                        R.string.top_albums,
+                        topAlbums,
+                        artist
+                    )
+                    navigationContext.navigationController?.navigate("extendedList/$id")
+                }
+            }
+        ) {
+            Column {
+                if (top5albums != null) {
+                    top5albums.forEach {
+                        AlbumListItem(album = it, modifier = Modifier.clickable { })
+                    }
+                } else {
+                    for (x in 1..5) {
+                        AlbumListItem()
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
+        Divider()
+        Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
+        Section(
+            title = stringResource(R.string.similar_artists),
+            headerModifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding)
+        ) {
+            SimilarArtists(artist?.similar)
+        }
+        Spacer(modifier = Modifier.height(PaddingSpacing.HorizontalMainPadding))
+
     }
 }
 

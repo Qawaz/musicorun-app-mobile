@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.getValue
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -135,34 +136,38 @@ fun ArtistListItem(
 
 @Composable
 fun AlbumListItem(
-    album: Album,
+    album: Album? = null,
     modifier: Modifier = Modifier
 ) {
-
     val painter = rememberImagePainter(
-        album.imageURL,
-//        previewPlaceholder = LastfmEntity.ALBUM.asDrawableSource(),
-//        fadeIn = true,
+        album?.imageURL,
+        builder = {
+            crossfade(true)
+            placeholder(LastfmEntity.ALBUM.asDrawableSource())
+        }
     )
+
 
 //    album.onResourcesChange { painter.request = it.imageURL }
 
     ListItem(
         modifier = modifier,
-        title = album.name,
-        subTitle = album.artist,
+        title = album?.name.orEmpty(),
+        subTitle = album?.artist,
         leftImage = {
             Box(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(roundedImageClip)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
+                Image(
+                    painter = painterResource(LastfmEntity.ALBUM.asDrawableSource()),
+                    contentDescription = album?.name
                 )
-
-                LastfmImageComponent(images = album.images, contentDescription = album.name)
+                Image(
+                    painter = painter,
+                    contentDescription = album?.name
+                )
             }
         }
     )
@@ -170,53 +175,55 @@ fun AlbumListItem(
 
 @Composable
 fun TrackListItem(
-    track: Track?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    track: Track? = null,
 ) {
-    val imageURL = remember {
-        mutableStateOf(track?.imageURL)
-    }
-
-    val painter = rememberImagePainter(
-        imageURL.value,
-        builder = {
-            crossfade(true)
-            placeholder(LastfmEntity.TRACK.asDrawableSource())
-        }
-    )
-
-    LaunchedEffect(track) {
-        track?.onResourcesChange {
-            imageURL.value = track?.imageURL
-        }
-    }
-
-    ListItem(
-        modifier = modifier,
-        title = track?.name.orEmpty(),
-        subTitle = track?.artist,
-        placeholder = track?.name == null,
-        leftImage = {
-            Box(
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(roundedImageClip)
-            ) {
+    if (track == null) {
+        ListItem(
+            modifier = modifier,
+            title = "",
+            placeholder = true,
+            leftImage = {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                )
-
-                Image(
-                    painter = painterResource(id = LastfmEntity.TRACK.asDrawableSource()),
-                    contentDescription = track?.name
-                )
-
-                Image(painter = painter, contentDescription = track?.name)
-
+                        .size(50.dp)
+                        .clip(roundedImageClip)
+                ) {
+                    Image(
+                        painter = painterResource(id = LastfmEntity.TRACK.asDrawableSource()),
+                        contentDescription = "Empty"
+                    )
+                }
             }
-        }
-    )
+        )
+    } else {
+        val imageUrl by track.imageUrlState
+        val painter = rememberImagePainter(
+            imageUrl.orEmpty(),
+            builder = {
+                crossfade(true)
+                placeholder(LastfmEntity.TRACK.asDrawableSource())
+            }
+        )
+        ListItem(
+            modifier = modifier,
+            title = track.name,
+            subTitle = track.artist,
+            leftImage = {
+                Box(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(roundedImageClip)
+                ) {
+                    Image(
+                        painter = painterResource(LastfmEntity.TRACK.asDrawableSource()),
+                        contentDescription = track.name
+                    )
+                    Image(painter = painter, contentDescription = track.name)
+                }
+            }
+        )
+    }
 }
 
 @Composable
@@ -251,18 +258,18 @@ fun UserListItem(
 @Composable
 fun ListItemPreview() {
     MusicorumTheme {
-        Scaffold (
+        Scaffold(
             modifier = Modifier.height(400.dp)
         ) {
             Column(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceAround
             ) {
-                ArtistListItem(artist = Artist.fromSample(), modifier = Modifier.clickable {  })
+                ArtistListItem(artist = Artist.fromSample(), modifier = Modifier.clickable { })
                 Divider()
-                TrackListItem(track = Track.fromSample(), modifier = Modifier.clickable {  })
+                TrackListItem(track = Track.fromSample(), modifier = Modifier.clickable { })
                 Divider()
-                TrackListItem(track = null, modifier = Modifier.clickable {  })
+                TrackListItem(track = null, modifier = Modifier.clickable { })
             }
         }
     }

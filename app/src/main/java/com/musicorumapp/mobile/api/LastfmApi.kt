@@ -68,16 +68,15 @@ class LastfmApi {
 
             val controller = PagingController(
                 entity = LastfmEntity.ARTIST,
-                perPage = perPage,
-                requester = { pg ->
-                    val items = getArtistEndpoint().searchArtists(query, perPage, pg)
+                perPage = perPage
+            ) { pg ->
+                val items = getArtistEndpoint().searchArtists(query, perPage, pg)
 
-                    totalResults = Utils.anyToInt(items.totalResults)
+                totalResults = Utils.anyToInt(items.totalResults)
 
-                    items.matches.artist.map { it.toArtist() }
-                }
-            )
-            controller.doRequest(1)
+                items.matches.artist.map { it.toArtist() }
+            }
+            controller.fetchPage(1)
             controller.totalResults = totalResults
 
             return controller
@@ -88,16 +87,15 @@ class LastfmApi {
 
             val controller = PagingController(
                 entity = LastfmEntity.ALBUM,
-                perPage = perPage,
-                requester = { pg ->
-                    val items = getAlbumsEndpoint().searchAlbums(query, perPage, pg)
+                perPage = perPage
+            ) { pg ->
+                val items = getAlbumsEndpoint().searchAlbums(query, perPage, pg)
 
-                    totalResults = Utils.anyToInt(items.totalResults)
+                totalResults = Utils.anyToInt(items.totalResults)
 
-                    items.matches.albums.map { it.toAlbum() }
-                }
-            )
-            controller.doRequest(1)
+                items.matches.albums.map { it.toAlbum() }
+            }
+            controller.fetchPage(1)
             controller.totalResults = totalResults
 
             return controller
@@ -108,16 +106,15 @@ class LastfmApi {
 
             val controller = PagingController(
                 entity = LastfmEntity.TRACK,
-                perPage = perPage,
-                requester = { pg ->
-                    val items = getTracksEndpoint().searchTracks(query, perPage, pg)
+                perPage = perPage
+            ) { pg ->
+                val items = getTracksEndpoint().searchTracks(query, perPage, pg)
 
-                    totalResults = Utils.anyToInt(items.totalResults)
+                totalResults = Utils.anyToInt(items.totalResults)
 
-                    items.matches.tracks.map { it.toTrack() }
-                }
-            )
-            controller.doRequest(1)
+                items.matches.tracks.map { it.toTrack() }
+            }
+            controller.fetchPage(1)
             controller.totalResults = totalResults
 
             return controller

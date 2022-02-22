@@ -36,8 +36,8 @@ import com.google.accompanist.insets.statusBarsPadding
 import com.musicorumapp.mobile.Constants
 import com.musicorumapp.mobile.R
 import com.musicorumapp.mobile.ui.contexts.LocalNavigationContext
-import com.musicorumapp.mobile.states.models.DiscoverPageViewModel
-import com.musicorumapp.mobile.states.models.SearchResults
+import com.musicorumapp.mobile.state.models.DiscoverPageViewModel
+import com.musicorumapp.mobile.state.models.SearchResults
 import com.musicorumapp.mobile.ui.components.*
 import com.musicorumapp.mobile.ui.theme.PaddingSpacing
 import com.musicorumapp.mobile.ui.theme.PoppinsFontFamily

@@ -1,5 +1,8 @@
 package com.musicorumapp.mobile.api.models
 
+import android.util.Log
+import androidx.compose.runtime.mutableStateOf
+import com.musicorumapp.mobile.LogTag
 import com.musicorumapp.mobile.utils.Utils
 import com.squareup.moshi.Json
 
@@ -12,18 +15,16 @@ data class Track(
     val listeners: Int? = null,
     var images: LastfmImages
 ) : PageableItem, BaseEntity {
-    private val onResourcesChangeCallbacks: MutableList<(Track) -> Unit> = mutableListOf()
-
     var resource: TrackResource? = null
         set(value) {
             field = value
-            onResourcesChangeCallbacks.forEach { it(this) }
+            imageUrlState.value = imageURL
         }
 
     override val imageURL: String?
         get() = images.bestImage ?: resource?.spotify_covers?.getOrNull(0)
 
-    fun onResourcesChange(cb: (Track) -> Unit) = onResourcesChangeCallbacks.add(cb)
+    val imageUrlState = mutableStateOf<String?>(null)
 
     companion object {
         fun fromSample(): Track = Track(

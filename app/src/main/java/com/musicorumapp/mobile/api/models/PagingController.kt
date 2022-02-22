@@ -1,14 +1,22 @@
 package com.musicorumapp.mobile.api.models
 
-class PagingController<T: PageableItem> (
+import androidx.compose.runtime.mutableStateListOf
+
+class PagingController<T: PageableItem>(
     val entity: LastfmEntity,
     val perPage: Int = 20,
     var totalResults: Int = 0,
-    private val pages: MutableMap<Int, List<T>> = mutableMapOf(),
+    var totalPages: Int = 0,
+    val pages: MutableMap<Int, List<T>> = mutableMapOf(),
     val requester: suspend (page: Int) -> List<T>
 ) {
+    val itemsAsState = mutableStateListOf<T>()
+    val canRetrieveMore: Boolean
+        get() = pages.size < totalPages
+
     private fun addPageContent(page: Int, items: List<T>): PagingController<T> {
         pages[page] = items
+        itemsAsState.addAll(items)
         return this
     }
 
@@ -24,10 +32,16 @@ class PagingController<T: PageableItem> (
         return items
     }
 
-    suspend fun doRequest(page: Int): List<T> {
+    suspend fun fetchPage(page: Int): List<T> {
         val results = requester(page)
         addPageContent(page, results)
         return results
+    }
+
+    suspend fun fetchNextPage (): List<T>? {
+        if (!canRetrieveMore) return null
+
+        return fetchPage(pages.size + 1)
     }
 
     override fun toString(): String {

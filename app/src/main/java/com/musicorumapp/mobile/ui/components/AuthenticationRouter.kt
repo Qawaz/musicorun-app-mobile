@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.musicorumapp.mobile.Constants
@@ -34,6 +35,8 @@ fun AuthenticationRouter(
     val authenticationState by authenticationViewModel.authenticationValidationState.observeAsState(
         AuthenticationViewModel.State.NONE
     )
+
+    Log.i(LogTag, LocalWindowInsets.current.navigationBars.layoutInsets.top.toString())
 
     LaunchedEffect(token) {
         when {

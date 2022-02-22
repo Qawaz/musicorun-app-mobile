@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.musicorumapp.mobile.authentication.AuthenticationPreferences
 import com.musicorumapp.mobile.ui.components.AuthenticationRouter
@@ -34,6 +35,8 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Necessary for accompanist -> https://google.github.io/accompanist/insets/#something-not-working
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setTheme(R.style.Theme_Musicorum_NoActionBar)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

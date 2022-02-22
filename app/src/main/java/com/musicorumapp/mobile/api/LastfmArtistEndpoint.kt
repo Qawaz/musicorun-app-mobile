@@ -61,12 +61,12 @@ interface LastfmArtistEndpoint {
 
     @GET("/")
     @LastfmMethod("artist.getTopAlbums")
-    @Wrapped(path = ["topalbums", "album"])
+    @Wrapped(path = ["topalbums"])
     suspend fun getTopAlbums(
         @Query("artist") artist: String,
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 50,
-    ): List<LastfmAlbumFromArtistTopAlbumsResponseItem>
+    ): LastfmArtistTopAlbumsResponse
 
 
     @GET("/")

@@ -1,6 +1,5 @@
 package com.musicorumapp.mobile.repos
 
-import com.musicorumapp.mobile.api.LastfmApi
 import com.musicorumapp.mobile.api.LastfmArtistEndpoint
 import com.musicorumapp.mobile.api.LastfmTrackEndpoint
 import com.musicorumapp.mobile.api.models.*
@@ -31,35 +30,40 @@ class ArtistRepository @Inject constructor(
 
     suspend fun getArtistTopTracks(artist: String, perPage: Int = 20): PagingController<Track> {
         var totalResponses = 0
-        val controller = PagingController(
+        var totalPages = 0
+        val controller = PagingController<Track>(
             entity = LastfmEntity.TRACK,
             perPage = perPage,
             requester = { pg ->
                 val response = artistEndpoint.getTopTracks(artist, limit = perPage, page = pg)
 
-                println(response.tracks)
-                println(response.tracks.size)
-
                 totalResponses = Utils.anyToInt(response.attributes.total)
-
+                totalPages = Utils.anyToInt(response.attributes.totalPages)
                 response.tracks.map { it.toTrack() }
-            }
-        )
-        controller.doRequest(1)
+            })
+        controller.fetchPage(1)
         controller.totalResults = totalResponses
+        controller.totalPages = totalPages
 
         return controller
     }
 
     suspend fun getArtistTopAlbums(artist: String, perPage: Int = 20): PagingController<Album> {
+        var totalResponses = 0
+        var totalPages = 0
         val controller = PagingController(
             entity = LastfmEntity.ALBUM,
             perPage = perPage,
             requester = { pg ->
-                artistEndpoint.getTopAlbums(artist, limit = perPage, page = pg).map { it.toAlbum() }
-            }
-        )
-        controller.doRequest(1)
+                val response = artistEndpoint.getTopAlbums(artist, limit = perPage, page = pg)
+
+                totalResponses = Utils.anyToInt(response.attributes.total)
+                totalPages = Utils.anyToInt(response.attributes.totalPages)
+                response.albums.map { it.toAlbum() }
+            })
+        controller.fetchPage(1)
+        controller.totalResults = totalResponses
+        controller.totalPages = totalPages
 
         return controller
     }

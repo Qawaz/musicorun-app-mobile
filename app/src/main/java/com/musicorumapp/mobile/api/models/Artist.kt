@@ -129,3 +129,11 @@ data class LastfmArtistTopTracksResponse(
     @field:Json(name = "track")
     val tracks: List<TrackFromArtistTopTracksItem>
 )
+
+data class LastfmArtistTopAlbumsResponse(
+    @field:Json(name = "@attr")
+    val attributes: ListResponseAttributes,
+
+    @field:Json(name = "album")
+    val albums: List<LastfmAlbumFromArtistTopAlbumsResponseItem>
+)
