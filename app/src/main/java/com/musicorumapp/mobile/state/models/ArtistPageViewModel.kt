@@ -54,11 +54,9 @@ class ArtistPageViewModel @Inject constructor(
 
 
                 if (_artist.imageURL == null) {
-                    _artist.onResourcesChange {
-                        fetchColors(context, predominantColorState, snackbarHostState)
-                    }
                     try {
                         MusicorumResource.fetchArtistsResources(listOf(_artist))
+                        fetchColors(context, predominantColorState, snackbarHostState)
                     } catch (e: Exception) {
 
                     }

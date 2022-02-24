@@ -100,7 +100,7 @@ val SecondaryAppBarTextStyle = TextStyle(
 )
 
 val SecondaryAppBarSubtitleTextStyle = TextStyle(
-    fontSize = 16.sp,
+    fontSize = 12.sp,
     fontWeight = FontWeight.Normal,
     fontFamily = PoppinsFontFamily,
     color = SecondaryTextColor

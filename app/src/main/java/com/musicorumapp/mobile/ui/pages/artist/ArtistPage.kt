@@ -175,8 +175,8 @@ fun ArtistContentInside(
             title = stringResource(R.string.top_tracks),
             subTitle = if (topTracks != null) resources.getQuantityString(
                 R.plurals.tracks_quantity,
-                topTracks.totalResults,
-                compactDecimalInstance.format(topTracks.totalResults)
+                topTracks.totalResults.value,
+                compactDecimalInstance.format(topTracks.totalResults.value)
             ) else "",
             modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding),
             onClick = {
@@ -184,7 +184,7 @@ fun ArtistContentInside(
                     val id = navigationContext.addPagingController(
                         R.string.top_tracks,
                         topTracks,
-                        artist
+                        artist.name
                     )
                     navigationContext.navigationController?.navigate("extendedList/$id")
                 }
@@ -211,8 +211,8 @@ fun ArtistContentInside(
             title = stringResource(R.string.top_albums),
             subTitle = if (topAlbums != null) resources.getQuantityString(
                 R.plurals.albums_quantity,
-                topAlbums.totalResults,
-                compactDecimalInstance.format(topAlbums.totalResults)
+                topAlbums.totalResults.value,
+                compactDecimalInstance.format(topAlbums.totalResults.value)
             ) else "",
             modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding),
             onClick = {
@@ -220,7 +220,7 @@ fun ArtistContentInside(
                     val id = navigationContext.addPagingController(
                         R.string.top_albums,
                         topAlbums,
-                        artist
+                        artist.name
                     )
                     navigationContext.navigationController?.navigate("extendedList/$id")
                 }

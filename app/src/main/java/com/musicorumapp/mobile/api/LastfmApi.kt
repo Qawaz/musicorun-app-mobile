@@ -1,5 +1,7 @@
 package com.musicorumapp.mobile.api
 
+import android.util.Log
+import com.musicorumapp.mobile.LogTag
 import com.musicorumapp.mobile.api.interceptors.LastfmKeyInterceptor
 import com.musicorumapp.mobile.api.interceptors.LastfmMethodInterceptor
 import com.musicorumapp.mobile.api.interceptors.SignedRequestInterceptor
@@ -72,12 +74,16 @@ class LastfmApi {
             ) { pg ->
                 val items = getArtistEndpoint().searchArtists(query, perPage, pg)
 
+                Log.v(LogTag, items.totalResults.toString())
                 totalResults = Utils.anyToInt(items.totalResults)
 
                 items.matches.artist.map { it.toArtist() }
             }
             controller.fetchPage(1)
-            controller.totalResults = totalResults
+            controller.totalPages = totalResults / perPage
+            controller.totalResults.value = totalResults
+
+            Log.v(LogTag, controller.toString())
 
             return controller
         }
@@ -96,7 +102,8 @@ class LastfmApi {
                 items.matches.albums.map { it.toAlbum() }
             }
             controller.fetchPage(1)
-            controller.totalResults = totalResults
+            controller.totalPages = totalResults / perPage
+            controller.totalResults.value = totalResults
 
             return controller
         }
@@ -115,7 +122,8 @@ class LastfmApi {
                 items.matches.tracks.map { it.toTrack() }
             }
             controller.fetchPage(1)
-            controller.totalResults = totalResults
+            controller.totalPages = totalResults / perPage
+            controller.totalResults.value = totalResults
 
             return controller
         }

@@ -1,5 +1,6 @@
 package com.musicorumapp.mobile.api.models
 
+import androidx.compose.runtime.mutableStateOf
 import com.musicorumapp.mobile.utils.Utils
 import com.squareup.moshi.Json
 
@@ -14,21 +15,16 @@ class Artist(
     val tags: MutableList<String> = mutableListOf(),
     var wiki: Wiki? = null,
 ) : PageableItem, BaseEntity {
-    private val onResourcesChangeCallbacks: MutableList<(Artist) -> Unit> = mutableListOf()
-
     override val imageURL: String?
         get() = resource?.spotify_images?.getOrNull(0)
+
+    val imageUrlState = mutableStateOf<String?>(null)
 
     var resource: ArtistResource? = null
         set(value) {
             field = value
-            println("SETTING ARTIST RESOURCE")
-            onResourcesChangeCallbacks.forEach { it(this) }
+            imageUrlState.value = imageURL
         }
-
-    fun onResourcesChange(cb: (Artist) -> Unit) {
-        onResourcesChangeCallbacks.add(cb)
-    }
 
     companion object {
         fun fromSample(): Artist {

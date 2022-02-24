@@ -21,7 +21,7 @@ class LocalNavigationContextContent(
         return id
     }
 
-    fun addPagingController(@StringRes title: Int, controller: PagingController<*>, from: BaseEntity): String {
+    fun addPagingController(@StringRes title: Int, controller: PagingController<*>, from: String?): String {
         val id = Random.nextInt(0, Int.MAX_VALUE).toString()
         pagingControllerStore[id] = ExtendedListStoreItem(title, controller, from)
         return id
@@ -30,7 +30,7 @@ class LocalNavigationContextContent(
     data class ExtendedListStoreItem(
         @StringRes val title: Int,
         val controller: PagingController<*>,
-        val from: BaseEntity
+        val from: String?
     )
 }
 

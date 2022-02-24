@@ -98,8 +98,13 @@ fun ArtistListItem(
     modifier: Modifier = Modifier
 ) {
 
+    val imageUrl by artist.imageUrlState
     val painter = rememberImagePainter(
-        artist.imageURL,
+        imageUrl.orEmpty(),
+        builder = {
+            crossfade(true)
+            placeholder(LastfmEntity.ARTIST.asDrawableSource())
+        }
     )
 
 //    artist.onResourcesChange { painter.request = it.imageURL }
@@ -113,22 +118,14 @@ fun ArtistListItem(
                     .size(50.dp)
                     .clip(CircleShape)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
+                Image(
+                    painter = painterResource(LastfmEntity.ARTIST.asDrawableSource()),
+                    contentDescription = artist.name
                 )
-
-                Image(painter = painter, contentDescription = artist.name)
-
-                when (painter.state) {
-                    is ImagePainter.State.Success -> {}
-                    else -> {
-                        Image(
-                            painter = painterResource(id = LastfmEntity.ARTIST.asDrawableSource()),
-                            contentDescription = artist.name
-                        )
-                    }
-                }
+                Image(
+                    painter = painter,
+                    contentDescription = artist.name
+                )
             }
         }
     )

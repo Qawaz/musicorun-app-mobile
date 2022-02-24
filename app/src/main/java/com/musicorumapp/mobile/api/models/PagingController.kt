@@ -1,11 +1,13 @@
 package com.musicorumapp.mobile.api.models
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 
 class PagingController<T: PageableItem>(
     val entity: LastfmEntity,
     val perPage: Int = 20,
-    var totalResults: Int = 0,
+    var totalResults: MutableState<Int> = mutableStateOf(0),
     var totalPages: Int = 0,
     val pages: MutableMap<Int, List<T>> = mutableMapOf(),
     val requester: suspend (page: Int) -> List<T>
@@ -45,10 +47,6 @@ class PagingController<T: PageableItem>(
     }
 
     override fun toString(): String {
-        var type = "Unknown"
-        if (getAllItems().isNotEmpty()) {
-            type = getAllItems().first().javaClass.simpleName
-        }
-        return "PagingController<$type>(perPage = $perPage, pages = ${pages.size}, items = ${getAllItems().size}, totalResults = ${totalResults})"
+        return "PagingController<$entity>(perPage = $perPage, pages = ${pages.size}, items = ${getAllItems().size}, totalResults = ${totalResults})"
     }
 }

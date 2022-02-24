@@ -42,7 +42,7 @@ class ArtistRepository @Inject constructor(
                 response.tracks.map { it.toTrack() }
             })
         controller.fetchPage(1)
-        controller.totalResults = totalResponses
+        controller.totalResults.value = totalResponses
         controller.totalPages = totalPages
 
         return controller
@@ -62,7 +62,7 @@ class ArtistRepository @Inject constructor(
                 response.albums.map { it.toAlbum() }
             })
         controller.fetchPage(1)
-        controller.totalResults = totalResponses
+        controller.totalResults.value = totalResponses
         controller.totalPages = totalPages
 
         return controller

@@ -81,17 +81,16 @@ fun SimilarArtistItem(
     val artistPlaceholderPainter = painterResource(id = LastfmEntity.ARTIST.asDrawableSource())
     val padding = if (isLast) 0 else 12
 
-    val imageURL = remember {
-        mutableStateOf<String?>(artist?.imageURL)
-    }
+    val imageURL = artist?.imageUrlState
+    val painter = rememberImagePainter(
+        imageURL?.value,
+        builder = {
+            crossfade(true)
+            placeholder(LastfmEntity.ARTIST.asDrawableSource())
+        }
+    )
 
     println("---------------------- IMAGE URL $imageURL")
-    
-    LaunchedEffect(artist) {
-        artist?.onResourcesChange {
-            imageURL.value = artist.imageURL
-        }
-    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -101,13 +100,7 @@ fun SimilarArtistItem(
             .clip(RoundedCornerShape(2.dp))
     ) {
         Image(
-            painter = if (imageURL.value != null) rememberImagePainter(
-                imageURL.value,
-                builder = {
-                    crossfade(true)
-                    placeholder(LastfmEntity.ARTIST.asDrawableSource())
-                }
-            )
+            painter = if (imageURL?.value != null) painter
             else artistPlaceholderPainter,
             contentDescription = artist?.name,
             modifier = Modifier

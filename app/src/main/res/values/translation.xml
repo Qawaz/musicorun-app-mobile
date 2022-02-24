@@ -51,7 +51,9 @@
     <string name="home_page_image_content_user">User profile image</string>
 
     <!-- Discover -->
-    <string name="discover_page_results_text">%1$s results</string>
+    <plurals name="discover_page_results_text">
+        <item quantity="one">%1$s result</item>
+        <item quantity="other">%1$s results</item></plurals>
     <string name="discover_page_no_results">Nothing found</string>
 
     <!-- Artist -->

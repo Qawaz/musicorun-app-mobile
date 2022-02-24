@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -34,11 +35,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.statusBarsPadding
 import com.musicorumapp.mobile.Constants
+import com.musicorumapp.mobile.LogTag
 import com.musicorumapp.mobile.R
 import com.musicorumapp.mobile.ui.contexts.LocalNavigationContext
 import com.musicorumapp.mobile.state.models.DiscoverPageViewModel
 import com.musicorumapp.mobile.state.models.SearchResults
 import com.musicorumapp.mobile.ui.components.*
+import com.musicorumapp.mobile.ui.contexts.LocalCompactDecimalFormatContext
 import com.musicorumapp.mobile.ui.theme.PaddingSpacing
 import com.musicorumapp.mobile.ui.theme.PoppinsFontFamily
 import com.musicorumapp.mobile.ui.theme.Shapes
@@ -144,23 +147,46 @@ fun DiscoverPage(
 }
 
 @Composable
+private fun formatResultsNumber(count: Int?): String {
+    val resources = LocalContext.current.resources
+    val compactDecimalInstance = LocalCompactDecimalFormatContext.current.instance
+
+    return resources.getQuantityString(
+        R.plurals.discover_page_results_text,
+        count ?: 0,
+        compactDecimalInstance.format(count)
+    )
+}
+
+@Composable
 private fun ResultsView(
     results: SearchResults,
     resourcesFetched: Boolean?
 ) {
+    val navigationContext = LocalNavigationContext.current
+
     if (results.hasResults) {
-        val navigationContext = LocalNavigationContext.current
+        Log.i(LogTag, results.artists?.totalPages.toString())
+        val totalArtists = formatResultsNumber(results.artists?.totalResults?.value)
+        val totalAlbums = formatResultsNumber(results.albums?.totalResults?.value)
+        val totalTracks = formatResultsNumber(results.tracks?.totalResults?.value)
 
         Log.i(Constants.LOG_TAG, "----- RESULTS VIEW RECOMPOSE")
 
         Column {
             Section(
                 title = stringResource(id = R.string.artists),
-                subTitle = stringResource(
-                    id = R.string.discover_page_results_text,
-                    NumberFormat.getInstance().format(results.artists?.totalResults ?: 0)
-                ),
-                onClick = {},
+                subTitle = totalArtists,
+                onClick = {
+                    if (results.artists != null) {
+                        val id = navigationContext.addPagingController(
+                            R.string.artists,
+                            results.artists!!,
+                            totalArtists
+                        )
+                        navigationContext.navigationController?.navigate("extendedList/$id")
+                    }
+                }
             ) {
                 Column {
                     results.artists?.getAllItems()?.take(3)?.forEach {
@@ -174,11 +200,17 @@ private fun ResultsView(
             Spacer(modifier = Modifier.height(PaddingSpacing.MediumPadding))
             Section(
                 title = stringResource(id = R.string.albums),
-                subTitle = stringResource(
-                    id = R.string.discover_page_results_text,
-                    NumberFormat.getInstance().format(results.albums?.totalResults ?: 0)
-                ),
-                onClick = {},
+                subTitle = totalAlbums,
+                onClick = {
+                    if (results.albums != null) {
+                        val id = navigationContext.addPagingController(
+                            R.string.albums,
+                            results.albums!!,
+                            totalAlbums
+                        )
+                        navigationContext.navigationController?.navigate("extendedList/$id")
+                    }
+                }
             ) {
                 Column {
                     results.albums?.getAllItems()?.take(3)?.forEach {
@@ -189,11 +221,17 @@ private fun ResultsView(
             Spacer(modifier = Modifier.height(PaddingSpacing.MediumPadding))
             Section(
                 title = stringResource(id = R.string.tracks),
-                subTitle = stringResource(
-                    id = R.string.discover_page_results_text,
-                    NumberFormat.getInstance().format(results.tracks?.totalResults ?: 0)
-                ),
-                onClick = {},
+                subTitle = totalTracks,
+                onClick = {
+                    if (results.tracks != null) {
+                        val id = navigationContext.addPagingController(
+                            R.string.tracks,
+                            results.tracks!!,
+                            totalTracks
+                        )
+                        navigationContext.navigationController?.navigate("extendedList/$id")
+                    }
+                }
             ) {
                 Column {
                     results.tracks?.getAllItems()?.take(3)?.forEach {

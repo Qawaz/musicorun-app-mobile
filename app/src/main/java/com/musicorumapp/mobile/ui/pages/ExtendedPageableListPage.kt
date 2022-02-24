@@ -19,6 +19,7 @@ import com.musicorumapp.mobile.api.models.*
 import com.musicorumapp.mobile.ui.components.*
 import com.musicorumapp.mobile.ui.theme.PaddingSpacing
 import com.musicorumapp.mobile.ui.utils.OnBottomReached
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -26,7 +27,7 @@ import java.lang.Exception
 @Composable
 fun ExtendedPageableListPage(
     @StringRes title: Int,
-    from: BaseEntity,
+    from: String?,
     controller: PagingController<*>
 ) {
     val items = controller.itemsAsState
@@ -45,6 +46,9 @@ fun ExtendedPageableListPage(
                     if (controller.entity === LastfmEntity.TRACK) {
                         @Suppress("UNCHECKED_CAST") // Suppressing as the entity was checked
                         MusicorumResource.fetchTracksResources(newItems as List<Track>)
+                    } else if (controller.entity === LastfmEntity.ARTIST) {
+                        @Suppress("UNCHECKED_CAST") // Suppressing as the entity was checked
+                        MusicorumResource.fetchArtistsResources(newItems as List<Artist>)
                     }
                 }
             } catch (e: Exception) {
@@ -59,6 +63,9 @@ fun ExtendedPageableListPage(
                 if (controller.entity === LastfmEntity.TRACK) {
                     @Suppress("UNCHECKED_CAST") // Suppressing as the entity was checked
                     MusicorumResource.fetchTracksResources(controller.getAllItems() as List<Track>)
+                } else if (controller.entity === LastfmEntity.ARTIST) {
+                    @Suppress("UNCHECKED_CAST") // Suppressing as the entity was checked
+                    MusicorumResource.fetchArtistsResources(controller.getAllItems() as List<Artist>)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -70,7 +77,7 @@ fun ExtendedPageableListPage(
         topBar = {
             SecondaryAppBar(
                 title = stringResource(title),
-                subTitle = from.name,
+                subTitle = from,
                 extendToStatusBar = true,
                 showBackButton = true
             )
@@ -78,7 +85,6 @@ fun ExtendedPageableListPage(
     ) {
         LazyColumn(
             modifier = Modifier
-                .padding(horizontal = PaddingSpacing.HorizontalMainPadding)
                 .fillMaxWidth(),
             state = lazyColumnState
         ) {
@@ -88,13 +94,22 @@ fun ExtendedPageableListPage(
             items(items) {
                 when (it) {
                     is Track -> {
-                        TrackListItem(track = it)
+                        TrackListItem(
+                            track = it,
+                            modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding)
+                        )
                     }
                     is Album -> {
-                        AlbumListItem(album = it)
+                        AlbumListItem(
+                            album = it,
+                            modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding)
+                        )
                     }
                     is Artist -> {
-                        ArtistListItem(artist = it)
+                        ArtistListItem(
+                            artist = it,
+                            modifier = Modifier.padding(horizontal = PaddingSpacing.HorizontalMainPadding)
+                        )
                     }
                 }
             }

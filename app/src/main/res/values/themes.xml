@@ -20,7 +20,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Musicorum.SplashScreenTheme" parent="android:ThemeOverlay.Material.Dark">
+    <style name="Theme.Musicorum.SplashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:statusBarColor">@color/ic_launcher_background</item>
         <item name="android:navigationBarColor">@color/ic_launcher_background</item>
         <item name="android:colorBackground">@color/ic_launcher_background</item>
