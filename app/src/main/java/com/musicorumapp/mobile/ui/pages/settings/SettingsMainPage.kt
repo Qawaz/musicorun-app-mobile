@@ -28,7 +28,9 @@ fun SettingsMainPage() {
     val navigationContext = LocalNavigationContext.current
     val authContext = LocalAuth.current
 
-    Column {
+    Column (
+        modifier = Modifier.fillMaxSize()
+            ) {
         Column(
             modifier = Modifier.background(md_theme_dark_surfaceVariant)
         ) {
@@ -60,7 +62,7 @@ fun SettingsMainPage() {
                         primaryText = stringResource(R.string.settings_customization_scheme),
                         secondaryText = stringResource(R.string.settings_customization_scheme_description),
                         modifier = Modifier.clickable {
-                            navigationContext.navigationController?.navigate(ComposableRoutes.ColorSchemeSettingsPage)
+//                            navigationContext.navigationController?.navigate(ComposableRoutes.ColorSchemeSettingsPage)
                         },
                         icon = {
                             Icon(

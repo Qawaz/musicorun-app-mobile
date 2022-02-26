@@ -40,8 +40,6 @@ fun BottomNavigationBar(
                     mainPages.forEach {
                         val title = stringResource(id = it.titleResource)
                         val currentRoute = currentRoute(navController = navController)
-                        val root = navController.graph.startDestinationRoute.orEmpty()
-                        Log.d(Constants.LOG_TAG, root)
                         val selected = currentRoute == it.name
 
                         NavigationBarItem(

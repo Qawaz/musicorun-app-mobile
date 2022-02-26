@@ -23,7 +23,6 @@ fun PageAnimation(content: @Composable () -> Unit) {
         visible = visible.value,
         enter = fadeIn() + slideInHorizontally(
             initialOffsetX = { -60 }
-
         ),
         exit = fadeOut() + shrinkHorizontally(shrinkTowards = Alignment.CenterHorizontally)
     ) {

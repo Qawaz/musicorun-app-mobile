@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.musicorumapp.mobile.Constants
 import com.musicorumapp.mobile.LogTag
 import com.musicorumapp.mobile.authentication.AuthenticationPreferences
@@ -24,7 +25,7 @@ import com.musicorumapp.mobile.ui.LoginScreen
 import com.musicorumapp.mobile.ui.contexts.*
 import com.musicorumapp.mobile.ui.navigation.BottomNavigationBar
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, androidx.compose.animation.ExperimentalAnimationApi::class)
 @Composable
 fun AuthenticationRouter(
     token: String?,
@@ -62,7 +63,7 @@ fun AuthenticationRouter(
     val loggedIn =
         (authenticationState == AuthenticationViewModel.State.AUTHENTICATING || authenticationState == AuthenticationViewModel.State.LOGGED_IN)
 
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 

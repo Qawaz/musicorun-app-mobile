@@ -5,16 +5,16 @@ import com.squareup.moshi.Json
 
 data class Album(
     override val entity: LastfmEntity = LastfmEntity.ALBUM,
-    override val name: String,
-    val artist: String?,
-    val url: String,
-    val images: LastfmImages,
-    val listeners: Int? = null,
-    val playCount: Int? = null,
-    val userPlayCount: Int? = null,
-    val tracks: MutableMap<Short, Track> = mutableMapOf(),
-    val tags: MutableList<String> = mutableListOf(),
-    val wiki: Wiki? = null,
+    override var name: String,
+    var artist: String? = null,
+    var url: String,
+    var images: LastfmImages,
+    var listeners: Int? = null,
+    var playCount: Int? = null,
+    var userPlayCount: Int? = null,
+    var tracks: MutableMap<Short, Track> = mutableMapOf(),
+    var tags: MutableList<String> = mutableListOf(),
+    var wiki: Wiki? = null,
 
     ) : PageableItem, BaseEntity {
     private val onResourcesChangeCallbacks: MutableList<(Album) -> Unit> = mutableListOf()
@@ -31,6 +31,17 @@ data class Album(
     fun onResourcesChange(cb: (Album) -> Unit) {
         onResourcesChangeCallbacks.add(cb)
     }
+
+    companion object {
+        fun fromSample(): Album {
+            return Album(
+                name = "Planet Her",
+                artist = "Doja cat",
+                url = "https://last.fm/music/Doja+Cat/Planet+Her",
+                images = LastfmImages.fromEmpty(LastfmEntity.ALBUM),
+            )
+        }
+    }
 }
 
 data class LastfmAlbumInfoResponse(
@@ -41,12 +52,12 @@ data class LastfmAlbumInfoResponse(
     val listeners: Any,
     val playcount: Any,
     val userplaycount: Any,
-    val tracks: LastfmAlbumInfoResponseTracks,
-    val tags: LastfmAlbumInfoResponseTags,
+    val tracks: LastfmAlbumInfoResponseTracks?,
+    val tags: Any?,
     val wiki: WikiResponse?
 ) {
     data class LastfmAlbumInfoResponseTracks(
-        val track: List<LastfmAlbumInfoResponseTracksItem>
+        val track: List<LastfmAlbumInfoResponseTracksItem>?
     ) {
         data class LastfmAlbumInfoResponseTracksItem(
             val name: String,
@@ -84,9 +95,12 @@ data class LastfmAlbumInfoResponse(
     fun toAlbum(): Album {
         val images = LastfmImages.fromSerializable(image, LastfmEntity.ALBUM)
 
+        val tags = if (tags is LastfmAlbumInfoResponseTags)
+            tags.tag.map { it.name }
+        else null
         val tracksItems = mutableMapOf<Short, Track>()
 
-        tracks.track.forEach {
+        tracks?.track?.forEach {
             val t = it.toTrack()
             t.images = images
             tracksItems[Utils.anyToInt(it.attr.rank).toShort()] = t
@@ -100,7 +114,7 @@ data class LastfmAlbumInfoResponse(
             listeners = Utils.anyToInt(listeners),
             playCount = Utils.anyToInt(playcount),
             userPlayCount = Utils.anyToInt(userplaycount),
-            tags = tags.tag.map { it.name }.toMutableList(),
+            tags = (tags ?: emptyList()).toMutableList(),
             wiki = wiki?.toWiki(),
             tracks = tracksItems
         )

@@ -24,21 +24,25 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.fade
 import com.google.accompanist.placeholder.material.fade
 import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.placeholder
 import com.musicorumapp.mobile.Constants
 import com.musicorumapp.mobile.api.models.*
 import com.musicorumapp.mobile.ui.theme.MusicorumTheme
+import com.musicorumapp.mobile.ui.theme.SkeletonPrimaryColor
+import com.musicorumapp.mobile.ui.theme.SkeletonSecondaryColor
 import com.musicorumapp.mobile.ui.theme.md_theme_dark_onSecondary
 
 private val roundedImageClip = RoundedCornerShape(4.dp)
+val listItemLeftImageDefaultSize = 50.dp
 
 @Composable
 fun ListItem(
-    title: String,
+    title: String?,
     modifier: Modifier = Modifier,
     subTitle: String? = null,
-    placeholder: Boolean = false,
     subtitleIcon: @Composable () -> Unit = {},
     leftImage: @Composable () -> Unit = {},
 ) {
@@ -56,33 +60,40 @@ fun ListItem(
 
         Column {
             Text(
-                title,
+                title ?: "Placeholder",
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 modifier = Modifier
                     .placeholder(
-                        visible = placeholder,
-                        highlight = PlaceholderHighlight.fade()
+                        visible = title == null,
+                        highlight = PlaceholderHighlight.fade(
+                            highlightColor = SkeletonSecondaryColor
+                        ),
+                        color = SkeletonPrimaryColor,
+                        shape = CircleShape
                     )
                     .height(20.dp)
             )
-            if (subTitle != null) {
+            if (title == null || (subTitle != null)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     subtitleIcon()
 
                     Text(
-                        subTitle,
+                        if (title == null) "Secondary placeholder" else subTitle.orEmpty(),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier
-                            .placeholder(
-                                visible = placeholder,
-                                highlight = PlaceholderHighlight.fade()
-                            )
+                        modifier = Modifier.placeholder(
+                            visible = title == null,
+                            highlight = PlaceholderHighlight.fade(
+                                highlightColor = SkeletonSecondaryColor
+                            ),
+                            color = SkeletonPrimaryColor,
+                            shape = CircleShape
+                        )
                             .padding(top = 2.dp)
                     )
                 }
@@ -115,7 +126,7 @@ fun ArtistListItem(
         leftImage = {
             Box(
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(listItemLeftImageDefaultSize)
                     .clip(CircleShape)
             ) {
                 Image(
@@ -149,12 +160,12 @@ fun AlbumListItem(
 
     ListItem(
         modifier = modifier,
-        title = album?.name.orEmpty(),
+        title = album?.name,
         subTitle = album?.artist,
         leftImage = {
             Box(
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(listItemLeftImageDefaultSize)
                     .clip(roundedImageClip)
             ) {
                 Image(
@@ -178,12 +189,11 @@ fun TrackListItem(
     if (track == null) {
         ListItem(
             modifier = modifier,
-            title = "",
-            placeholder = true,
+            title = null,
             leftImage = {
                 Box(
                     modifier = Modifier
-                        .size(50.dp)
+                        .size(listItemLeftImageDefaultSize)
                         .clip(roundedImageClip)
                 ) {
                     Image(
@@ -209,7 +219,7 @@ fun TrackListItem(
             leftImage = {
                 Box(
                     modifier = Modifier
-                        .size(50.dp)
+                        .size(listItemLeftImageDefaultSize)
                         .clip(roundedImageClip)
                 ) {
                     Image(
@@ -236,7 +246,7 @@ fun UserListItem(
         leftImage = {
             Box(
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(listItemLeftImageDefaultSize)
                     .clip(CircleShape)
             ) {
                 Box(

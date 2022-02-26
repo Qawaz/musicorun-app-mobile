@@ -14,7 +14,7 @@ fun MainApp(
     authPrefs: AuthenticationPreferences?,
     navController: NavHostController
 ) {
-    val token = authPrefs?.getLastfmSessionToken() ?: "."
+    val token = authPrefs?.getLastfmSessionToken()
     val systemUiController = rememberSystemUiController()
 
     systemUiController.setNavigationBarColor(

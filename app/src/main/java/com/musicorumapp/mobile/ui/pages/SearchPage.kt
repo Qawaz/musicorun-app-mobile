@@ -42,6 +42,7 @@ import com.musicorumapp.mobile.state.models.DiscoverPageViewModel
 import com.musicorumapp.mobile.state.models.SearchResults
 import com.musicorumapp.mobile.ui.components.*
 import com.musicorumapp.mobile.ui.contexts.LocalCompactDecimalFormatContext
+import com.musicorumapp.mobile.ui.navigation.ComposableRoutes
 import com.musicorumapp.mobile.ui.theme.PaddingSpacing
 import com.musicorumapp.mobile.ui.theme.PoppinsFontFamily
 import com.musicorumapp.mobile.ui.theme.Shapes
@@ -214,7 +215,10 @@ private fun ResultsView(
             ) {
                 Column {
                     results.albums?.getAllItems()?.take(3)?.forEach {
-                        AlbumListItem(album = it, modifier = Modifier.clickable { })
+                        AlbumListItem(album = it, modifier = Modifier.clickable {
+                            val id = navigationContext.addAlbum(it)
+                            navigationContext.navigationController?.navigate(ComposableRoutes.AlbumPage(id))
+                        })
                     }
                 }
             }

@@ -2,13 +2,11 @@ package com.musicorumapp.mobile.ui.pages.artist
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,7 +19,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.musicorumapp.mobile.R
 import com.musicorumapp.mobile.api.models.*
@@ -31,8 +28,8 @@ import com.musicorumapp.mobile.ui.contexts.LocalSnackbarContext
 import com.musicorumapp.mobile.state.models.ArtistPageViewModel
 import com.musicorumapp.mobile.ui.components.*
 import com.musicorumapp.mobile.ui.contexts.LocalCompactDecimalFormatContext
+import com.musicorumapp.mobile.ui.navigation.ComposableRoutes
 import com.musicorumapp.mobile.ui.theme.AppMaterialIcons
-import com.musicorumapp.mobile.ui.theme.MusicorumTheme
 import com.musicorumapp.mobile.ui.theme.PaddingSpacing
 import com.musicorumapp.mobile.ui.theme.md_theme_dark_background
 import com.musicorumapp.mobile.utils.Utils
@@ -88,15 +85,15 @@ fun ArtistContent(
     val painter = rememberImagePainter(
         imageBitmap,
         builder = {
-            crossfade(true)
-            placeholder(LastfmEntity.ARTIST.asDrawableSource())
+            crossfade(500)
+//            placeholder(LastfmEntity.ARTIST.asDrawableSource())
         }
     )
 
     val backgroundPainter = rememberImagePainter(
         data = topAlbums?.getPageContent(1)?.first()?.images?.getCustomSizeImage(600),
         builder = {
-            crossfade(true)
+            crossfade(500)
         },
     )
 
@@ -123,7 +120,6 @@ fun ArtistContent(
     )
     ArtistAppBar(
         scrollState = scrollState,
-        navContext = navContext,
         name = artist?.name,
         mainImagePainter = painter
     )
@@ -229,7 +225,10 @@ fun ArtistContentInside(
             Column {
                 if (top5albums != null) {
                     top5albums.forEach {
-                        AlbumListItem(album = it, modifier = Modifier.clickable { })
+                        AlbumListItem(album = it, modifier = Modifier.clickable {
+                            val id = navigationContext.addAlbum(it)
+                            navigationContext.navigationController?.navigate(ComposableRoutes.AlbumPage(id))
+                        })
                     }
                 } else {
                     for (x in 1..5) {
@@ -256,10 +255,10 @@ fun ArtistContentInside(
 @Composable
 fun ArtistAppBar(
     scrollState: ScrollState,
-    navContext: LocalNavigationContextContent,
     mainImagePainter: Painter,
     name: String?
 ) {
+    val navContext = LocalNavigationContext.current
     val snackbarHost = LocalSnackbarContext.current
     val scope = rememberCoroutineScope()
     FadeableAppBar(

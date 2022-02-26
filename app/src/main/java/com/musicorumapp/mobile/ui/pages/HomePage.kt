@@ -28,6 +28,7 @@ import coil.transform.CircleCropTransformation
 import com.google.accompanist.insets.statusBarsPadding
 import com.musicorumapp.mobile.Constants
 import com.musicorumapp.mobile.R
+import com.musicorumapp.mobile.api.models.Album
 import com.musicorumapp.mobile.api.models.Artist
 import com.musicorumapp.mobile.api.models.User
 import com.musicorumapp.mobile.authentication.AuthenticationPreferences
@@ -64,6 +65,7 @@ fun HomePage(
 
     Column(
         modifier = Modifier
+            .fillMaxHeight()
             .verticalScroll(rememberScrollState())
     ) {
         AppBar(
@@ -107,6 +109,11 @@ fun HomePage(
             ArtistListItem(artist = artist, modifier = Modifier.clickable {
                 val id = navigationContext.addArtist(artist)
                 navigationContext.navigationController?.navigate("artist/$id")
+            })
+
+            AlbumListItem(Album.fromSample(), modifier = Modifier.clickable {
+                val id = navigationContext.addAlbum(Album.fromSample())
+                navigationContext.navigationController?.navigate(ComposableRoutes.AlbumPage(id))
             })
         }
     }

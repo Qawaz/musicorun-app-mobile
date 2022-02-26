@@ -22,16 +22,19 @@
     <string name="top_artists">Top artists</string>
 
     <plurals name="tracks_quantity">
+        <item quantity="zero">No tracks</item>
         <item quantity="one">%1$s track</item>
         <item quantity="other">%1$s tracks</item>
     </plurals>
 
     <plurals name="albums_quantity">
+        <item quantity="zero">No albums</item>
         <item quantity="one">%1$s album</item>
         <item quantity="other">%1$s albums</item>
     </plurals>
 
     <plurals name="artists_quantity">
+        <item quantity="zero">No artists</item>
         <item quantity="one">%1$s artist</item>
         <item quantity="other">%1$s artists</item>
     </plurals>
