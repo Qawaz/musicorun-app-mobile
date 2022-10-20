@@ -172,9 +172,3 @@ fun darkerColor(color: Color, qnt: Int = 10): Color {
         blue = rgb.b
     )
 }
-
-fun getBitmap(url: String) {
-
-}
-
-
