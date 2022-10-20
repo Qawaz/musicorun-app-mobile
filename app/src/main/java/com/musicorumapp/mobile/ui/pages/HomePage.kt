@@ -175,18 +175,6 @@ fun UserCard(
                 modifier = Modifier.fillMaxHeight(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-//                NetworkImage(
-//                    url = user?.images?.bestImage,
-//                    contentDescription = stringResource(
-//                        R.string.home_page_image_content_user
-//                    ),
-//                    modifier = Modifier
-//                        .size(cardHeight - (PaddingSpacing.MediumPadding * 2))
-//                        .shadow(
-//                            elevation = 6.dp,
-//                            shape = CircleShape,
-//                        )
-//                )
                 Image(
                     painter = rememberImagePainter(
                         data = user?.images?.bestImage,

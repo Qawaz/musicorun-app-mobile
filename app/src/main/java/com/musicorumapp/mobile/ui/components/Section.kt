@@ -73,28 +73,3 @@ fun Section(
         content()
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-@Preview(showBackground = true)
-fun SectionComposePreview() {
-    MusicorumTheme {
-        Scaffold(
-            modifier = Modifier.height(250.dp)
-        ) {
-            Section(
-                title = "Section example",
-//                subTitle = "Subtitle example",
-                onClick = {}
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color(0x22FFFFFF))
-                )
-            }
-        }
-    }
-}
