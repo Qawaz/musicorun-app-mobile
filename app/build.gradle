@@ -1,3 +1,5 @@
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+
 plugins {
     id 'com.android.application'
     id 'com.google.dagger.hilt.android'
@@ -7,32 +9,42 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
+    id 'com.github.triplet.play' version '3.7.0'
 }
 
-def tokensFile = rootProject.file("tokens.properties")
-def tokens = new Properties()
-tokens.load(new FileInputStream(tokensFile))
-
-def releaseTokensFile = rootProject.file("tokens.release.properties")
-def releaseTokens = new Properties()
-releaseTokens.load(new FileInputStream(releaseTokensFile))
+def appKeyStoreFile = "../upload_key.jks"
+def appKeyStorePassword = System.env.KEY_STORE_PASSWORD
+def appKeyAlias = System.env.KEY_ALIAS
+def appKeyPassword = System.env.KEY_PASSWORD
 
 android {
     namespace 'io.musicorum.mobile'
     compileSdk 33
 
+    signingConfigs {
+        release {
+            storeFile file(appKeyStoreFile)
+            storePassword appKeyStorePassword
+            keyAlias appKeyAlias
+            keyPassword appKeyPassword
+        }
+    }
+
     defaultConfig {
         applicationId "io.musicorum.mobile"
         minSdk 28
         targetSdk 33
-        versionCode 24
-        versionName "1.6-rc"
+        versionCode 26
+        versionName "1.6.2-rc"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
         }
 
+        def tokensFile = rootProject.file("tokens.properties")
+        def tokens = new Properties()
+        tokens.load(new FileInputStream(tokensFile))
         buildConfigField("String", "LASTFM_API_KEY", tokens["LASTFM_API_KEY"])
         buildConfigField("String", "LASTFM_SECRET", tokens["LASTFM_SECRET"])
         buildConfigField("String", "MUSICORUM_API_KEY", tokens["MUSICORUM_API_KEY"])
@@ -40,6 +52,11 @@ android {
 
     buildTypes {
         release {
+            def releaseTokensFile = rootProject.file("tokens.release.properties")
+            def releaseTokens = new Properties()
+            releaseTokens.load(new FileInputStream(releaseTokensFile))
+
+            signingConfig signingConfigs.release
             buildConfigField("String", "LASTFM_API_KEY", releaseTokens["LASTFM_API_KEY"])
             buildConfigField("String", "LASTFM_SECRET", releaseTokens["LASTFM_SECRET"])
             buildConfigField("String", "MUSICORUM_API_KEY", releaseTokens["MUSICORUM_API_KEY"])
@@ -73,13 +90,21 @@ android {
     }
 }
 
-dependencies {
+play {
+    def googleServiceAccountKeyFile = "../google_sa_key.json"
+    track.set("internal")
+    serviceAccountCredentials.set(file(googleServiceAccountKeyFile))
+    releaseStatus.set(ReleaseStatus.IN_PROGRESS)
+}
 
+dependencies {
     implementation 'com.github.skydoves:balloon-compose:1.5.2'
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
     implementation "androidx.paging:paging-compose:1.0.0-alpha17"
     implementation 'com.github.crowdin.mobile-sdk-android:sdk:1.5.7'
     implementation platform('androidx.compose:compose-bom:2022.11.00')
+    implementation 'com.google.android.play:app-update:2.0.1'
+    implementation 'com.google.android.play:app-update-ktx:2.0.1'
 
     //def room_version = "2.4.3"
     //implementation "androidx.room:room-runtime:$room_version"
