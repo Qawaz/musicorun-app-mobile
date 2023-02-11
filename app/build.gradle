@@ -34,8 +34,8 @@ android {
         applicationId "io.musicorum.mobile"
         minSdk 28
         targetSdk 33
-        versionCode 33
-        versionName "1.7.2-rc"
+        versionCode 34
+        versionName "1.7.3-rc"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
