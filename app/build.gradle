@@ -34,8 +34,8 @@ android {
         applicationId "io.musicorum.mobile"
         minSdk 28
         targetSdk 33
-        versionCode 38
-        versionName "1.8.1-rc"
+        versionCode 39
+        versionName "1.8.2-rc"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -100,12 +100,14 @@ play {
 dependencies {
     implementation 'com.github.skydoves:balloon-compose:1.5.2'
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
-    implementation "androidx.paging:paging-compose:1.0.0-alpha17"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha18"
     implementation 'com.github.crowdin.mobile-sdk-android:sdk:1.5.7'
     implementation platform('androidx.compose:compose-bom:2022.11.00')
     implementation 'com.google.android.play:app-update:2.0.1'
     implementation 'com.google.android.play:app-update-ktx:2.0.1'
     implementation 'org.jsoup:jsoup:1.15.3'
+    implementation 'io.sentry:sentry-android:6.14.0'
+    implementation 'io.sentry:sentry-compose-android:6.14.0'
 
     //def room_version = "2.4.3"
     //implementation "androidx.room:room-runtime:$room_version"
