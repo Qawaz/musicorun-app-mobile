@@ -10,12 +10,19 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
     id 'com.github.triplet.play' version '3.7.0'
+    id "io.sentry.android.gradle" version "3.4.2"
 }
 
 def appKeyStoreFile = "../upload_key.jks"
 def appKeyStorePassword = System.env.KEY_STORE_PASSWORD
 def appKeyAlias = System.env.KEY_ALIAS
 def appKeyPassword = System.env.KEY_PASSWORD
+
+sentry {
+    includeProguardMapping = true
+    autoUploadProguardMapping = true
+    experimentalGuardsquareSupport = true
+}
 
 android {
     namespace 'io.musicorum.mobile'
@@ -34,8 +41,8 @@ android {
         applicationId "io.musicorum.mobile"
         minSdk 28
         targetSdk 33
-        versionCode 39
-        versionName "1.8.2-rc"
+        versionCode 40
+        versionName "1.8.3-rc"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
