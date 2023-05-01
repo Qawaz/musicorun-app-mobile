@@ -42,7 +42,7 @@ android {
         minSdk 28
         targetSdk 33
         versionCode 40
-        versionName "1.8.3-rc"
+        versionName "1.8.4-rc"
         compileSdkPreview = "UpsideDownCake"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
