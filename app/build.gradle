@@ -37,7 +37,9 @@ android {
         }
     }
 
+
     lintOptions {
+        disable 'MissingTranslation'
         disable 'NullSafeMutableLiveData'
     }
 
@@ -45,7 +47,7 @@ android {
         applicationId "io.musicorum.mobile"
         minSdk 28
         targetSdk 33
-        versionCode 43
+        versionCode 44
         versionName "1.8.4-rc"
         //compileSdkPreview = "UpsideDownCake"
 
@@ -127,8 +129,7 @@ dependencies {
     //kapt "androidx.room:room-compiler:$room_version"
 
     implementation "com.google.dagger:hilt-android:2.44.2"
-    implementation 'androidx.core:core-ktx:+'
-    implementation 'androidx.core:core-ktx:+'
+    implementation 'androidx.core:core-ktx:1.10.0'
     kapt "com.google.dagger:hilt-compiler:2.44.2"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
